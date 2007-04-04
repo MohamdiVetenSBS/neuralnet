@@ -10,14 +10,14 @@ import java.util.Arrays;
 public class AutoEncoder  {
     private static BackPropagation          network;
     private static double                   training_set[][];
-    private final static int                training_set_size       =   100;
+    private final static int                training_set_size       =   10;
     private final static int                hidden_units            =   2;
-    private final static int                output_length           =   100;
-    private final static int                input_length            =   100;
-    private final static double             eta                     =   0.5;
-    private final static double             alpha                   =   0.2;
+    private final static int                output_length           =   10;
+    private final static int                input_length            =   10;
+    private final static double             eta                     =   0.1;
+    private final static double             alpha                   =   0.01;
     private final static double             accepted_mse            =   1.0;
-    private final static int                max_iterations          =   5000000;
+    private final static int                max_iterations          =   1000000;
 
     public static void main(String args[]) {
         initTrainingSet();
