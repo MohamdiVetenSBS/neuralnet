@@ -5,32 +5,30 @@ package backprop; /**
  */
 
 
-import backprop.BackPropagation;
-
 import java.applet.Applet;
 import java.awt.*;
 
 
-public class BackPropagationImpl2 extends Applet {
-    private static BackPropagation          network;
-    private static double                   training_set[][];
-    private final static int                training_set_size       =   10000;//(int)(Math.pow(screen_size,2)*.8);
-    private final static int                screen_size             =   500;
-    private final static int                circle_radius           =   100;
-    private final static int                hidden_units            =   3;
-    private final static int                output_length           =   1;
-    private final static int                input_length            =   2;
-    private final static double             eta                     =   0.1;
-    private final static double             alpha                   =   0.01;
-    private final static double             accepted_mse            =   20;
-    private final static int                max_iterations          =   5000;
+public class BackPropMHLImpl extends Applet {
+    private static BackPropMultiHiddenLayer     network;
+    private static double                       training_set[][];
+    private final static int                    training_set_size       =   10000;//(int)(Math.pow(screen_size,2)*.8);
+    private final static int                    screen_size             =   500;
+    private final static int                    circle_radius           =   100;
+    private final static int                    hidden_units            =   4;
+    private final static int                    output_length           =   1;
+    private final static int                    input_length            =   2;
+    private final static double                 eta                     =   0.5;
+    private final static double                 alpha                   =   0.2;
+    private final static double                 accepted_mse            =   20;
+    private final static int                    max_iterations          =   5000;
 
     public void init() {
         initTrainingSet();
     }
     public void start(){
         try{
-            network = new BackPropagation(input_length,hidden_units,output_length);
+            network = new BackPropMultiHiddenLayer(new int[]{input_length,hidden_units,4,output_length});
             int i, j, k; double e;
             for (i=0, e=accepted_mse; (i<max_iterations && e>=accepted_mse); i++, System.out.println("Network error:\t"+e+"  \tEpoch: "+i))
                 for (j=0, k=0, e=0; j<training_set_size; j++, k=(int)(Math.random()*training_set_size)){
