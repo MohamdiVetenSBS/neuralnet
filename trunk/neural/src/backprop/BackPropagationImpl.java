@@ -1,4 +1,6 @@
-package backprop; /**
+package backprop;
+
+/**
  * Author: asalem
  * Description:
  * Date: Feb 13, 2007
