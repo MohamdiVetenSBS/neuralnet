@@ -2,7 +2,7 @@ package backprop;
 
 import java.util.Arrays;
 
-public class AutoEncoderMHL {
+public class AE_MHL_Nonlinear_Reduction {
     private static BackPropMultiHiddenLayer     network;
     private static double                       training_set[][];
     private final static int                    graph_axis_size         =   10;
