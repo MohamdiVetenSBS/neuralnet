@@ -4,15 +4,18 @@ import java.util.Arrays;
 
 public class AE_MHL_Nonlinear_Reduction {
     private static BackPropMultiHiddenLayer     network;
+    private static double                       test_set[][];
     private static double                       training_set[][];
+    private final static int                    test_set_size           =   10;
+    private final static double                 training_set_portion    =   .8;
+    private final static int                    training_set_size       =   (int)(training_set_portion*test_set_size);
     private final static int                    graph_axis_size         =   10;
-    private final static int                    training_set_size       =   15;
     private final static int                    output_length           =   100;
     private final static int                    input_length            =   100;
     private final static double                 eta                     =   0.1;
     private final static double                 alpha                   =   0.01;
-    private final static double                 accepted_mse            =   3;
-    private final static int                    max_iterations          =   1000000;
+    private final static double                 accepted_mse            =   1;
+    private final static int                    max_iterations          =   100000;
 
     public static void main(String args[]) {
         initTrainingSet();
@@ -24,14 +27,17 @@ public class AE_MHL_Nonlinear_Reduction {
             System.exit(3);
         }
         run();
-
     }
 
     private static void initTrainingSet(){
+        test_set = new double[test_set_size][input_length];
         training_set = new double[training_set_size][input_length];
-        for (int i=0; i<training_set_size; i++){
+        for (int i=0; i<test_set_size; i++){
             double k[]=generate_inputPatterns((int)(Math.random()*2)*(Math.random()>.5?1:-1),(int)(Math.random()*4)*(Math.random()>.5?1:-1));
-            training_set[i] = k;
+            test_set[i] = k;
+        }
+        for (int i=0; i<training_set_size; i++){
+            training_set[i] = test_set[(int)(Math.random()*test_set_size)];
         }
     }
     private static void train(){
@@ -55,7 +61,6 @@ public class AE_MHL_Nonlinear_Reduction {
                     System.out.print((int) training_set[i][j]+" ");
                 System.out.print("\t-->\t");
                 double output[]= network.run(training_set[i]);
-                int success=0;
                 double k[] = new double[input_length];
                 for(int j=0; j< input_length; j++){
                     k[j]=output[j]>0.5?1:0;
@@ -85,5 +90,19 @@ public class AE_MHL_Nonlinear_Reduction {
                 pattern[pos] = 1;
         }
         return pattern;
+    }
+    private static double get_test_set_error(){
+        double e=0;
+        try{
+            for (int i=0; i<test_set_size; i++){
+                double k[] = network.run(test_set[i]);
+                for (int j=0; j<test_set.length; j++)
+                    e += .5*Math.pow(test_set[i][j]-k[j], 2);
+            }
+        } catch (Exception ex){
+            System.out.println(ex.getMessage());
+            System.exit(5);
+        }
+        return e;
     }
 }
