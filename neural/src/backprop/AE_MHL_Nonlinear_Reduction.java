@@ -1,12 +1,14 @@
 package backprop;
 
 import java.util.Arrays;
+import java.text.DecimalFormat;
 
 public class AE_MHL_Nonlinear_Reduction {
     private static BackPropMultiHiddenLayer     network;
     private static double                       test_set[][];
     private static double                       training_set[][];
-    private final static int                    test_set_size           =   10;
+    private static double                       bad_inputs[][];
+    private final static int                    test_set_size           =   14;
     private final static double                 training_set_portion    =   .8;
     private final static int                    training_set_size       =   (int)(training_set_portion*test_set_size);
     private final static int                    graph_axis_size         =   10;
@@ -16,6 +18,9 @@ public class AE_MHL_Nonlinear_Reduction {
     private final static double                 alpha                   =   0.01;
     private final static double                 accepted_mse            =   1;
     private final static int                    max_iterations          =   100000;
+    private final static DecimalFormat          df                      =   new DecimalFormat("####.######");
+    private enum Set{TEST,TRAIN,BAD}
+
 
     public static void main(String args[]) {
         initTrainingSet();
@@ -26,7 +31,9 @@ public class AE_MHL_Nonlinear_Reduction {
             System.out.println(e.getMessage());
             System.exit(3);
         }
-        run();
+        check_classification(Set.TRAIN, false);
+        check_classification(Set.TEST, false);
+        check_classification(Set.BAD, false);
     }
 
     private static void initTrainingSet(){
@@ -39,11 +46,12 @@ public class AE_MHL_Nonlinear_Reduction {
         for (int i=0; i<training_set_size; i++){
             training_set[i] = test_set[(int)(Math.random()*test_set_size)];
         }
+        generate_bad_inputs();
     }
     private static void train(){
         try{
             int i, j, k; double e;
-            for (i=0, e= accepted_mse; (i< max_iterations && e>= accepted_mse); i++, System.out.println("Network error:\t"+e+"  \tEpoch: "+i)) {
+            for (i=0, e= accepted_mse; (i< max_iterations && e>= accepted_mse); i++, System.out.println("Epoch: "+i+"\tTraining error: "+df.format(e)+"\tTest Error: "+df.format(get_test_set_error())+"\tBad Input Error: "+df.format(get_bad_input_error()))) {
                 for (j=0, k=0, e=0; j< training_set_size; j++, k=(int)(Math.random()* training_set_size)){ /*k for online learning option */
                     e += network.train(training_set[j], training_set[j], eta, alpha);
                 }
@@ -53,24 +61,34 @@ public class AE_MHL_Nonlinear_Reduction {
             System.exit(1);
         }
     }
-    private static void run(){
+    private static void check_classification(Set set, boolean print_patterns){
+        int set_size=0;
+        String set_name="";
+        double[][] data_set=new double[0][0];
+        switch(set){
+            case TRAIN: set_size=training_set_size; set_name="Training Set"; data_set=training_set; break;
+            case TEST: set_size=test_set_size; set_name="Test Set"; data_set=test_set; break;
+            case BAD: set_size=10; set_name="Bad Input Set"; data_set=bad_inputs; break;
+        }
         int success_rate=0;
         try{
-            for (int i=0; i< training_set_size; i++) {
-                for (int j=0; j< input_length; j++)
-                    System.out.print((int) training_set[i][j]+" ");
-                System.out.print("\t-->\t");
-                double output[]= network.run(training_set[i]);
+            for (int i=0; i<set_size; i++) {
+                if (print_patterns){
+                    for (int j=0; j<input_length; j++)
+                        System.out.print((int) data_set[i][j]+" ");
+                    System.out.print("\t-->\t");
+                }
+                double output[]= network.run(data_set[i]);
                 double k[] = new double[input_length];
                 for(int j=0; j< input_length; j++){
                     k[j]=output[j]>0.5?1:0;
-                    System.out.print((output[j]>0.5?1:0)+" ");
+                    if (print_patterns) System.out.print((output[j]>0.5?1:0)+" ");
                 }
-                System.out.print("\n");
-                if (Arrays.equals(k, training_set[i]))
+                if (print_patterns) System.out.print("\n");
+                if (Arrays.equals(k, data_set[i]))
                     success_rate++;
             }
-            System.out.print("Reproduced "+success_rate+" patterns out of "+ training_set_size);
+            System.out.println("Reproduced "+success_rate+" patterns out of "+ set_size+" of "+set_name+".");
         } catch(Exception ex){
             System.out.println(ex.getMessage());
             System.exit(1);
@@ -96,12 +114,34 @@ public class AE_MHL_Nonlinear_Reduction {
         try{
             for (int i=0; i<test_set_size; i++){
                 double k[] = network.run(test_set[i]);
-                for (int j=0; j<test_set.length; j++)
+                for (int j=0; j<k.length; j++)
                     e += .5*Math.pow(test_set[i][j]-k[j], 2);
             }
         } catch (Exception ex){
             System.out.println(ex.getMessage());
             System.exit(5);
+        }
+        return e;
+    }
+    private static void generate_bad_inputs(){
+        int slopes[] = {-3,3,-4,4,-5,5};
+        int intercepts[] = {-5,5,-6,6,-7,7};
+        bad_inputs = new double[10][input_length];
+        for(int i=0; i<10; i++){
+            bad_inputs[i] = generate_inputPatterns(slopes[(int)(Math.random()*6)], intercepts[(int)(Math.random()*6)]);
+        }
+    }
+    private static double get_bad_input_error(){
+        double e=0;
+        try{
+            for (int i=0; i<10; i++){
+                double k[] = network.run(bad_inputs[i]);
+                for (int j=0; j<k.length; j++)
+                    e += .5*Math.pow(bad_inputs[i][j]-k[j], 2);
+            }
+        } catch (Exception ex){
+            System.out.println(ex.getMessage());
+            System.exit(6);
         }
         return e;
     }
