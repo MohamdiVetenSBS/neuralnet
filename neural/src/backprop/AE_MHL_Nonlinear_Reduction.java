@@ -1,5 +1,11 @@
 package backprop;
 
+/**
+ * Author: asalem
+ * Description:
+ * Date: April 02, 2007
+ */
+
 import java.util.Arrays;
 import java.text.DecimalFormat;
 
