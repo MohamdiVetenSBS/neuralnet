@@ -17,14 +17,14 @@ public class AE_MHL_Nonlinear_Reduction {
     private final static int                    test_set_size           =   14;
     private final static double                 training_set_portion    =   .8;
     private final static int                    training_set_size       =   (int)(training_set_portion*test_set_size);
-    private final static int                    graph_axis_size         =   10;
+    private final static int                    graph_axis_size         =   20;
     private final static int                    output_length           =   100;
     private final static int                    input_length            =   100;
     private final static double                 eta                     =   0.1;
     private final static double                 alpha                   =   0.01;
     private final static double                 accepted_mse            =   1;
     private final static int                    max_iterations          =   100000;
-    private final static DecimalFormat          df                      =   new DecimalFormat("####.######");
+    private final static DecimalFormat          df                      =   new DecimalFormat("####.#####");
     private enum Set{TEST,TRAIN,BAD}
 
 
@@ -57,7 +57,7 @@ public class AE_MHL_Nonlinear_Reduction {
     private static void train(){
         try{
             int i, j, k; double e;
-            for (i=0, e= accepted_mse; (i< max_iterations && e>= accepted_mse); i++, System.out.println("Epoch: "+i+"\tTraining error: "+df.format(e)+"\tTest Error: "+df.format(get_test_set_error())+"\tBad Input Error: "+df.format(get_bad_input_error()))) {
+            for (i=0, e= accepted_mse; (i< max_iterations && e>= accepted_mse); i++, System.out.println("Epoch: "+i+"\t\tTraining error: "+df.format(e)+"\t\tTest Error: "+df.format(get_test_set_error())+"\t\tBad Input Error: "+df.format(get_bad_input_error()))) {
                 for (j=0, k=0, e=0; j< training_set_size; j++, k=(int)(Math.random()* training_set_size)){ /*k for online learning option */
                     e += network.train(training_set[j], training_set[j], eta, alpha);
                 }
