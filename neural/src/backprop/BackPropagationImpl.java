@@ -29,7 +29,7 @@ public class BackPropagationImpl extends Applet implements Runnable, ActionListe
     private final static double             alpha                   =   0.01;
     private final static double             accepted_mse            =   20;
     private final static int                max_iterations          =   20000;
-    private Thread                          t;
+    private Thread                          t                       =   null;
     private volatile Graphics               g                       =   null;
     private volatile boolean                running;
     private final boolean                   show_training_set       =   false;
