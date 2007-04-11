@@ -1,7 +1,6 @@
 package backprop.AutoEncoders;
 
 import backprop.BackPropagation;
-import backprop.BackPropMultiHiddenLayer;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -18,7 +17,7 @@ public class AutoEncoderPoints extends Applet implements Runnable {
     private final static int                input_length            =   12;
     private final static double             eta                     =   0.1;
     private final static double             alpha                   =   0.01;
-    private final static double             accepted_mse            =   1;
+    private final static double             accepted_mse            =   0.4;
     private final static int                max_iterations          =   1000000;
     private static Graphics                 g                       =   null;
     private Thread                          t                       =   null;

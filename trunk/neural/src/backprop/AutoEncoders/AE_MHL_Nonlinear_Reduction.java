@@ -43,7 +43,7 @@ public class AE_MHL_Nonlinear_Reduction {
         check_classification(Set.TEST, false);
         check_classification(Set.BAD, false);
     }
-
+                                        
     private static void initTrainingSet(){
         test_set = new double[test_set_size][input_length];
         training_set = new double[training_set_size][input_length];
