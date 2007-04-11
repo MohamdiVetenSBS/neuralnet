@@ -1,4 +1,4 @@
-package backprop;
+package backprop.AutoEncoders;
 
 /**
  * Author: asalem
@@ -6,11 +6,13 @@ package backprop;
  * Date: Feb 13, 2007
  */
 
+import backprop.BackPropagation;
+
 import java.util.Arrays;
 
 
 public class AutoEncoder  {
-    private static BackPropagation          network;
+    private static BackPropagation network;
     private static double                   training_set[][];
     private final static int                training_set_size       =   24;
     private final static int                hidden_units            =   2;
@@ -76,12 +78,6 @@ public class AutoEncoder  {
         } catch(Exception ex){
             System.out.println(ex.getMessage());
             System.exit(1);
-        }
-    }
-
-    private static void print_weights(){
-        for (int i=0; i<network.output_size; i++){
-            
         }
     }
 }

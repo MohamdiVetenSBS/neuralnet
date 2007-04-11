@@ -97,6 +97,13 @@ public class BackPropagation {
         }
         return result;
     }
+    public double[] getHiddenLayer(){
+        double k[] = new double[hidden_size];
+        for (int i=0; i<hidden_size; i++){
+            k[i] = hidden_nodes.units[i].output;
+        }
+        return k;
+    }
     protected class layer {
         protected int size, input_size;
         protected neuron units[];

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 
 public class BackPropMultiHiddenLayer {
-    protected layer[]         layers;
+    public layer[]            layers;
 	protected int             input_size;
 	protected int             output_size;
     private   double          output[];
@@ -83,6 +83,13 @@ public class BackPropMultiHiddenLayer {
             }
         }
         return result;
+    }
+    public double[] getLayer(int x){
+        double k[] = new double[layers[x].size];
+        for (int i=0; i<layers[x].size; i++){
+            k[i] = layers[x].units[i].output;
+        }
+        return k;
     }
     protected class layer {
         protected int size, input_size;

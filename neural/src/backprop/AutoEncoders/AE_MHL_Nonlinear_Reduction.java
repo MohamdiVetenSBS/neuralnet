@@ -1,4 +1,4 @@
-package backprop;
+package backprop.AutoEncoders;
 
 /**
  * Author: asalem
@@ -6,26 +6,28 @@ package backprop;
  * Date: April 02, 2007
  */
 
+import backprop.BackPropMultiHiddenLayer;
+
 import java.util.Arrays;
 import java.text.DecimalFormat;
 
 public class AE_MHL_Nonlinear_Reduction {
-    private static BackPropMultiHiddenLayer     network;
+    private static BackPropMultiHiddenLayer network;
     private static double                       test_set[][];
     private static double                       training_set[][];
     private static double                       bad_inputs[][];
-    private final static int                    test_set_size           =   14;
+    private final static int                    test_set_size           =   20;
     private final static double                 training_set_portion    =   .8;
     private final static int                    training_set_size       =   (int)(training_set_portion*test_set_size);
-    private final static int                    graph_axis_size         =   20;
-    private final static int                    output_length           =   100;
-    private final static int                    input_length            =   100;
+    private final static int                    graph_axis_size         =   15;
+    private final static int                    output_length           =   (int)Math.pow(graph_axis_size,2);
+    private final static int                    input_length            =   (int)Math.pow(graph_axis_size,2);
     private final static double                 eta                     =   0.1;
     private final static double                 alpha                   =   0.01;
     private final static double                 accepted_mse            =   1;
     private final static int                    max_iterations          =   100000;
-    private final static DecimalFormat          df                      =   new DecimalFormat("####.#####");
-    private enum Set{TEST,TRAIN,BAD}
+    private final static DecimalFormat          df                      =   new DecimalFormat("####.####");
+    private enum                                Set                         {TEST,TRAIN,BAD}
 
 
     public static void main(String args[]) {
@@ -46,7 +48,7 @@ public class AE_MHL_Nonlinear_Reduction {
         test_set = new double[test_set_size][input_length];
         training_set = new double[training_set_size][input_length];
         for (int i=0; i<test_set_size; i++){
-            double k[]=generate_inputPatterns((int)(Math.random()*2)*(Math.random()>.5?1:-1),(int)(Math.random()*4)*(Math.random()>.5?1:-1));
+            double k[]=generate_inputPatterns((int)(Math.random()*3)*(Math.random()>.5?1:-1),(int)(Math.random()*5)*(Math.random()>.5?1:-1));
             test_set[i] = k;
         }
         for (int i=0; i<training_set_size; i++){
@@ -109,7 +111,7 @@ public class AE_MHL_Nonlinear_Reduction {
         for (int i=0, x=-(h-1); i<graph_axis_size; i++, x++){
             int y=m*x+b;
             int real = h-y;
-            int pos = ((real)*10)+i;
+            int pos = ((real)*graph_axis_size)+i;
             if (pos < input_length && pos >= 0)
                 pattern[pos] = 1;
         }
