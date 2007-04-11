@@ -20,7 +20,7 @@ public class AutoEncoder  {
     private final static int                input_length            =   24;
     private final static double             eta                     =   0.1;
     private final static double             alpha                   =   0.01;
-    private final static double             accepted_mse            =   4;
+    private final static double             accepted_mse            =   3.5;
     private final static int                max_iterations          =   1000000;
 
     public static void main(String args[]) {
