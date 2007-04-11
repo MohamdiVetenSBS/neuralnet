@@ -1,4 +1,6 @@
-package backprop;
+package backprop.AutoEncoders;
+
+import backprop.BackPropMultiHiddenLayer;
 
 import javax.swing.*;
 import java.applet.Applet;
@@ -7,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.awt.*;
 
-public class AE_MHL_Nonlinear_Reduction_App extends Applet implements Runnable {
+public class AE_Training_Graphs extends Applet implements Runnable {
     private static BackPropMultiHiddenLayer     network;
     private static double                       test_set[][];
     private static double                       training_set[][];
@@ -23,14 +25,15 @@ public class AE_MHL_Nonlinear_Reduction_App extends Applet implements Runnable {
     private final static double                 alpha                   =   0.01;
     private final static double                 accepted_mse            =   1.0;
     private final static int                    max_iterations          =   100000;
-    private final static DecimalFormat df                      =   new DecimalFormat("####.####");
+    private final static DecimalFormat          df                      =   new DecimalFormat("####.####");
     private static enum                         Set                         {TEST,TRAIN,BAD}
-    private static ArrayList<double[]> error                   =   new ArrayList<double[]>();
-    private static Graphics g                       =   null;
+    private static ArrayList<double[]>          error                   =   new ArrayList<double[]>();
+    private static Graphics                     g                       =   null;
     private Thread                              t                       =   null;
+    private volatile boolean                    running                 =   false;
     private static Runnable                     painter                 =   new Runnable(){
             public void run(){
-                Color colors[] = {Color.blue, Color.red, Color.green};
+                Color colors[] = {Color.green, Color.blue, Color.red};
                 g.setColor(Color.white);
                 g.fillRect(0,0, screen_size, screen_size);
                 int y1[]=new int[3], y2[]=new int[3];
@@ -70,19 +73,21 @@ public class AE_MHL_Nonlinear_Reduction_App extends Applet implements Runnable {
         if (t == null){
             t = new Thread(this);
             t.setPriority(Thread.MAX_PRIORITY);
+            running = true;
             t.start();
         }
     }
     public void run(){
          try {
+             if (!running) return;
             train();
         }catch(Exception e){
             System.out.println(e.getMessage());
             System.exit(3);
         }
-        check_classification(AE_MHL_Nonlinear_Reduction_App.Set.TRAIN, false);
-        check_classification(AE_MHL_Nonlinear_Reduction_App.Set.TEST, false);
-        check_classification(AE_MHL_Nonlinear_Reduction_App.Set.BAD, false);
+        check_classification(AE_Training_Graphs.Set.TRAIN, false);
+        check_classification(AE_Training_Graphs.Set.TEST, false);
+        check_classification(AE_Training_Graphs.Set.BAD, false);
     }
 
     private static void initTrainingSet(){
@@ -112,7 +117,7 @@ public class AE_MHL_Nonlinear_Reduction_App extends Applet implements Runnable {
             System.exit(1);
         }
     }
-    private static void check_classification(AE_MHL_Nonlinear_Reduction_App.Set set, boolean print_patterns){
+    private static void check_classification(AE_Training_Graphs.Set set, boolean print_patterns){
         int set_size=0;
         String set_name="";
         double[][] data_set=new double[0][0];
