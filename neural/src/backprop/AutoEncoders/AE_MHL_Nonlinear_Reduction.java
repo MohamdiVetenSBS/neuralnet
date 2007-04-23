@@ -42,6 +42,7 @@ public class AE_MHL_Nonlinear_Reduction {
         check_classification(Set.TRAIN, false);
         check_classification(Set.TEST, false);
         check_classification(Set.BAD, false);
+        print_bad_units();
     }
                                         
     private static void initTrainingSet(){
@@ -152,5 +153,21 @@ public class AE_MHL_Nonlinear_Reduction {
             System.exit(6);
         }
         return e;
+    }
+    private static void print_bad_units(){
+        try{
+            for (int i=0, j; i<10; i++){
+                double k[] = network.run(bad_inputs[i]);
+                System.out.println("Bad input "+i+" with slope: "+bad_inputs[i][0]+" and intercept: "+bad_inputs[i][1]);
+                for (j=0; j<k.length; j++){
+                    System.out.print(k[j]>.5 ? 1 : 0);
+                    if (j%graph_axis_size==0)
+                        System.out.print("\n");
+                }
+            }
+        } catch (Exception ex){
+            System.out.println(ex.getMessage());
+            System.exit(6);
+        }
     }
 }
