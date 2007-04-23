@@ -39,9 +39,8 @@ public class AE_Training_Graphs extends Applet implements Runnable {
                 int y1[]=new int[3], y2[]=new int[3];
                 int i= error.size()-(error.size()% screen_size);
                 for (int pos=0; i< error.size(); pos++, i++, y1=y2){
-                    for (int j=0;j<y1.length; j++)
+                    for (int j=0;j<y1.length; j++){
                         y2[j]=(int)(screen_size - error.get(i)[j]);
-                    for (int j=0; j<y1.length; j++){
                         g.setColor(colors[j]);
                         g.drawLine(pos-1<0?0:pos-1,y1[j],pos,y2[j]);
                     }

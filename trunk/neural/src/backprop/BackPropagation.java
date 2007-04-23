@@ -25,7 +25,7 @@ public class BackPropagation {
         this.output_nodes = new layer(output_size, hidden_size);
         this.output = new double[output_size];
     }
-    public double train(final double input[], final double desired[], final double eta, final double alpha) throws Exception {
+    public synchronized double train(final double input[], final double desired[], final double eta, final double alpha) throws Exception {
         if (input.length!=input_size || desired.length!=output_size){
             throw new Exception("Bad training parameters!");
         }
@@ -63,7 +63,7 @@ public class BackPropagation {
         }
         return .5*mse;
     }
-    public double[] run (final double input[]) throws Exception{
+    public synchronized double[] run (final double input[]) throws Exception{
         if (input.length!=input_size)
             throw new Exception("Bad run parameters!");
         int i, j; double sum, result[] = new double[output_size];
@@ -82,7 +82,7 @@ public class BackPropagation {
         }
         return result;
     }
-    public double[] runUnit (final double input[], int unit) throws Exception{
+    public synchronized double[] runUnit (final double input[], int unit) throws Exception{
         if (input.length!=input_size || unit >= hidden_size || unit<0)
             throw new Exception("Bad run parameters!");
         int i; double sum, result[] = new double[output_size];
@@ -97,7 +97,7 @@ public class BackPropagation {
         }
         return result;
     }
-    public double[] getHiddenLayer(){
+    public synchronized double[] getHiddenLayer(){
         double k[] = new double[hidden_size];
         for (int i=0; i<hidden_size; i++){
             k[i] = hidden_nodes.units[i].output;
