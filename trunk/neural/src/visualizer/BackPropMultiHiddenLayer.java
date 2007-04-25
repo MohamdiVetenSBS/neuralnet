@@ -19,9 +19,9 @@ public class BackPropMultiHiddenLayer {
         if (size.length < 3) throw new Exception("Bad network parameters!");
         for (int i: size)
             if (i<=0) throw new Exception("Bad network parameters!");
-        this.layers = new BackPropMultiHiddenLayer.layer[size.length-1];
+        this.layers = new layer[size.length-1];
         for (int i=0, j=1; j<size.length; i++, j++){
-            this.layers[i] = new BackPropMultiHiddenLayer.layer(size[j], size[i]);
+            this.layers[i] = new layer(size[j], size[i]);
         }
         this.input_size = size[0];
         this.output_size = size[size.length-1];
@@ -33,7 +33,7 @@ public class BackPropMultiHiddenLayer {
             throw new Exception("Bad training parameters!");
         }
         ArrayList<double[]> deltas = new ArrayList<double[]>();
-        for (BackPropMultiHiddenLayer.layer l:layers){
+        for (layer l:layers){
             deltas.add(new double[l.size]);
         }
         double error, sum, mse;
@@ -104,9 +104,9 @@ public class BackPropMultiHiddenLayer {
         public layer(final int size, final int input_size){
             this.size = size;
             this.input_size = input_size;
-            units = new BackPropMultiHiddenLayer.layer.neuron[size];
+            units = new neuron[size];
             for (int i=0; i<size; i++){
-                units[i] = new BackPropMultiHiddenLayer.layer.neuron(input_size);
+                units[i] = new neuron(input_size);
             }
         }
         protected class neuron{
